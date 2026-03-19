@@ -1,74 +1,115 @@
+
 # AI Emoji Translator
 
-Free emoji translator built with Flask and local Hugging Face models.
+A free **Emoji Translator** built with **Flask** and **local Hugging Face models**.
 
 It supports:
-1. Text to emoji translation
-2. Emoji to text translation
-3. Fast fallback keyword matching when model loading is slow or unavailable
+- **Text to Emoji** translation
+- **Emoji to Text** translation
+- **Fast fallback keyword matching** when the model is slow or unavailable
+
+---
 
 ## Features
 
-1. No OpenAI credits required
-2. Uses local embedding model (`all-MiniLM-L6-v2`)
-3. Optional Hugging Face token support via `.env`
-4. Responsive web UI with confidence score and translation method
-5. Exact emoji match path for fast emoji-to-text lookups
+- No OpenAI credits required
+- Uses a local embedding model: `all-MiniLM-L6-v2`
+- Optional Hugging Face token support via `.env`
+- Responsive web UI
+- Displays **confidence score** and **translation method**
+- Exact emoji match path for faster emoji-to-text lookups
+- Fallback keyword-based translation if the model fails to load
+
+---
 
 ## Tech Stack
 
-1. Flask
-2. sentence-transformers
-3. scikit-learn
-4. pandas
-5. Hugging Face ecosystem (local model runtime)
+- Flask
+- sentence-transformers
+- scikit-learn
+- pandas
+- Hugging Face ecosystem (local model runtime)
+
+---
 
 ## Quick Start
 
-### 1. Install dependencies
+### 1. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
-```
+````
 
-### 2. Optional environment setup
+### 2. (Optional) Environment Setup
 
 Create a `.env` file in the project root:
 
-```bash
+```env
 HUGGINGFACE_API_KEY=your_huggingface_api_key_here
 ```
 
-Note:
-1. The app works without this key in local mode.
-2. Never commit real tokens.
+> **Note:**
+>
+> * The app works without this key in local mode
+> * Never commit real tokens to GitHub
 
-### 3. Run the app
+### 3. Run the App
 
 ```bash
 python app.py
 ```
 
-Open:
+Then open:
 
 ```text
 http://127.0.0.1:5000
 ```
 
+---
+
 ## Usage Examples
 
 ### Text to Emoji
 
-1. Input: `sister`
-2. Output: `👩`
+**Input:**
 
-1. Input: `is your brother here`
-2. Output: `👨`
+```text
+sister
+```
+
+**Output:**
+
+```text
+👩
+```
+
+**Input:**
+
+```text
+is your brother here
+```
+
+**Output:**
+
+```text
+👨
+```
 
 ### Emoji to Text
 
-1. Input: `👋`
-2. Output: `hello, greeting, wave`
+**Input:**
+
+```text
+👋
+```
+
+**Output:**
+
+```text
+hello, greeting, wave
+```
+
+---
 
 ## Project Structure
 
@@ -76,7 +117,6 @@ http://127.0.0.1:5000
 emoji_transilator/
 ├── app.py
 ├── requirements.txt
-├── requirments.txt
 ├── dataset/
 │   └── emoji_dataset.csv
 ├── static/
@@ -84,43 +124,83 @@ emoji_transilator/
 ├── templates/
 │   └── index.html
 └── utils/
-	├── emoji_free.py
-	├── emoji_api.py
-	├── text_to_emoji.py
-	├── emoji_to_text.py
-	└── preprocess.py
+    ├── emoji_free.py
+    ├── emoji_api.py
+    ├── text_to_emoji.py
+    ├── emoji_to_text.py
+    └── preprocess.py
 ```
+
+---
+
+## How It Works
+
+1. User enters either plain text or an emoji
+2. The app detects the input type
+3. For text input:
+
+   * It uses a local sentence embedding model to find the closest matching emoji
+   * If the model is unavailable, it falls back to keyword matching
+4. For emoji input:
+
+   * It performs a direct lookup for exact emoji matches
+5. The app returns:
+
+   * The translated result
+   * Confidence score
+   * Translation method used
+
+---
 
 ## Notes
 
-1. First launch can take longer while the model initializes.
-2. If the model cannot load, the app falls back to keyword-based quick matching.
-3. Keep both `requirements.txt` and `requirments.txt` only if you intentionally support both names.
+* The **first launch may take longer** while the local model initializes
+* If the model cannot load, the app automatically falls back to **keyword-based matching**
+* Keep both `requirements.txt` and `requirments.txt` only if you intentionally support both filenames
+
+---
 
 ## Troubleshooting
 
-### App not starting
+### App Not Starting
 
-Run from the project directory:
+Make sure you are running the app from the project directory:
 
 ```bash
 cd d:\coding\projects\emoji_transilator
 python app.py
 ```
 
-### Slow first request
+### Slow First Request
 
-This is expected while local model resources are loaded.
+This is expected while local model resources are being loaded.
 
-### Wrong emoji for a phrase
+### Incorrect Emoji for a Phrase
 
-Update mapping logic in `utils/emoji_free.py` and add/clean relevant rows in `dataset/emoji_dataset.csv`.
+You can improve results by:
+
+* Updating the mapping logic in `utils/emoji_free.py`
+* Adding or cleaning relevant rows in `dataset/emoji_dataset.csv`
+
+---
 
 ## Security
 
-1. Do not commit `.env`.
-2. Rotate any token that was ever exposed.
+* Do not commit `.env`
+* Rotate any token that was ever exposed
 
-## License
+---
 
-MIT
+## Future Improvements
+
+* Add support for multi-emoji output
+* Improve phrase-level semantic matching
+* Add translation history
+* Add dark mode UI
+* Deploy online with Docker or Render
+* Expand the emoji dataset for better accuracy
+
+---
+
+```
+
