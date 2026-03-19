@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Emoji Translator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Emoji Translator</h1>
+        <p class="subtitle">Free AI Translation - No Credits Needed! ✨</p>
+
+        {% if warning %}
+        <div class="warning-box">
+            <strong>⚠️ Warning:</strong> {{ warning }}<br>
+            <a href="https://platform.openai.com/api-keys" target="_blank" style="color: #ff9800; text-decoration: underline;">Get API Key</a> | 
+            <a href="https://github.com/yourusername/emoji_translator#setup" target="_blank" style="color: #ff9800; text-decoration: underline;">Setup Guide</a>
+        </div>
+        {% endif %}
+
+        <form method="POST" class="form-container">
+            <div class="form-group">
+                <label for="mode">Conversion Mode:</label>
+                <select name="mode" id="mode">
+                    <option value="text_to_emoji" {% if mode == 'text_to_emoji' %}selected{% endif %}>Text → Emoji</option>
+                    <option value="emoji_to_text" {% if mode == 'emoji_to_text' %}selected{% endif %}>Emoji → Text</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="user_input">Input:</label>
+                <textarea 
+                    name="user_input" 
+                    id="user_input"
+                    placeholder="Enter text or emojis..." 
+                    required></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit">✨ Translate</button>
+        </form>
+
+        {% if error %}
+        <div class="error-box">
+            <strong>⚠️ Error:</strong> {{ error }}
+        </div>
+        {% endif %}
+
+        {% if result %}
+        <div class="result-box">
+            <h2>📊 Translation Result</h2>
+
+            {% if mode == 'text_to_emoji' %}
+                <div class="result-item">
+                    <label>Input Text:</label>
+                    <p class="result-text">{{ result.input }}</p>
+                </div>
+
+                <div class="result-item">
+                    <label>Emoji Meaning:</label>
+                    <p class="result-text">{{ result.description or result.matched_text }}</p>
+                </div>
+
+                <div class="result-item">
+                    <label>Emoji Translation:</label>
+                    <p class="result-emoji">{{ result.emoji }}</p>
+                </div>
+
+                <div class="result-item">
+                    <label>Confidence Score:</label>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ result.confidence * 100 }}%"></div>
+                        <span class="confidence-text">{{ (result.confidence * 100)|int }}%</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="result-item">
+                    <label>Input Emoji:</label>
+                    <p class="result-emoji">{{ result.input }}</p>
+                </div>
+
+                <div class="result-item">
+                    <label>Text Translation:</label>
+                    <p class="result-text">{{ result.text }}</p>
+                </div>
+
+                <div class="result-item">
+                    <label>Confidence Score:</label>
+                    <div class="confidence-bar">
+                        <div class="confidence-fill" style="width: {{ result.confidence * 100 }}%"></div>
+                        <span class="confidence-text">{{ (result.confidence * 100)|int }}%</span>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <label>Translation Method:</label>
+                    <p class="result-text" style="color: #667eea; font-weight: 600;">{{ result.method }}</p>
+                </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <footer class="footer">
+        <p>Made with ❤️ | AI-Powered Emoji Translation</p>
+    </footer>
+</body>
+</html>

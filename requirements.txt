@@ -1,0 +1,10 @@
+flask
+pandas
+numpy
+scikit-learn
+nltk
+emoji
+sentence-transformers
+transformers
+torch
+python-dotenv
