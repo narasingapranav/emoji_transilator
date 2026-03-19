@@ -1,195 +1,126 @@
-# 🤖 AI Emoji Translator
+# AI Emoji Translator
 
-An intelligent AI-powered emoji translator that converts text to emojis and emojis to text descriptions using OpenAI's GPT-3.5 Turbo.
+Free emoji translator built with Flask and local Hugging Face models.
+
+It supports:
+1. Text to emoji translation
+2. Emoji to text translation
+3. Fast fallback keyword matching when model loading is slow or unavailable
 
 ## Features
 
-✨ **Text → Emoji Translation** - Convert any text into the most appropriate emoji  
-📝 **Emoji → Text Translation** - Get descriptions of what emojis mean  
-🧠 **AI-Powered** - Uses OpenAI's GPT-3.5 Turbo for accurate predictions  
-🎨 **Modern UI** - Beautiful gradient interface with confidence scores  
-📱 **Responsive Design** - Works on desktop and mobile devices  
+1. No OpenAI credits required
+2. Uses local embedding model (`all-MiniLM-L6-v2`)
+3. Optional Hugging Face token support via `.env`
+4. Responsive web UI with confidence score and translation method
+5. Exact emoji match path for fast emoji-to-text lookups
 
-## Screenshots
+## Tech Stack
 
-Text to Emoji Translation:
-```
-Input: "is your brother here"
-Output: 👨 (appropriate emoji based on context)
-```
+1. Flask
+2. sentence-transformers
+3. scikit-learn
+4. pandas
+5. Hugging Face ecosystem (local model runtime)
 
-Emoji to Text Translation:
-```
-Input: 👋
-Output: "Hello, greeting, wave"
-```
+## Quick Start
 
-## Setup
+### 1. Install dependencies
 
-### Prerequisites
-- Python 3.8+
-- OpenAI API Key (Get it from https://platform.openai.com/api-keys)
-- pip package manager
-
-### Installation
-
-1. **Clone or extract the project**
 ```bash
-cd emoji_translator
+pip install -r requirements.txt
 ```
 
-2. **Install dependencies**
-```bash
-pip install -r requirments.txt
-```
-
-3. **Set up OpenAI API Key**
+### 2. Optional environment setup
 
 Create a `.env` file in the project root:
+
 ```bash
-OPENAI_API_KEY=sk-your-actual-api-key-here
+HUGGINGFACE_API_KEY=your_huggingface_api_key_here
 ```
 
-Or copy the example file:
-```bash
-cp .env.example .env
-# Then edit .env and add your actual API key
-```
+Note:
+1. The app works without this key in local mode.
+2. Never commit real tokens.
 
-## Running the App
+### 3. Run the app
 
 ```bash
 python app.py
 ```
 
-Open your browser and navigate to:
+Open:
+
+```text
+http://127.0.0.1:5000
 ```
-http://localhost:5000
-```
 
-## How It Works
+## Usage Examples
 
-### Text to Emoji Translation
-1. User enters text (e.g., "I'm excited about the party")
-2. OpenAI GPT analyzes the sentiment and context
-3. AI predicts the most appropriate emoji: 🎉
-4. Result displayed with confidence score
+### Text to Emoji
 
-### Emoji to Text Translation
-1. User enters emoji (e.g., 🍕)
-2. OpenAI GPT identifies the emoji and its meaning
-3. AI generates a text description
-4. Shows what the emoji represents
+1. Input: `sister`
+2. Output: `👩`
+
+1. Input: `is your brother here`
+2. Output: `👨`
+
+### Emoji to Text
+
+1. Input: `👋`
+2. Output: `hello, greeting, wave`
 
 ## Project Structure
 
-```
-emoji_translator/
-├── app.py                 # Flask application
-├── requirments.txt        # Python dependencies
-├── .env.example           # Example environment file
-├── utils/
-│   ├── emoji_api.py      # OpenAI GPT integration
-│   ├── preprocess.py     # Text preprocessing
-│   └── __init__.py
-├── templates/
-│   └── index.html        # Web interface
-├── static/
-│   └── styles.css        # UI styling
+```text
+emoji_transilator/
+├── app.py
+├── requirements.txt
+├── requirments.txt
 ├── dataset/
-│   └── emoji_dataset.csv # Fallback emoji database
-└── README.md             # This file
+│   └── emoji_dataset.csv
+├── static/
+│   └── styles.css
+├── templates/
+│   └── index.html
+└── utils/
+	├── emoji_free.py
+	├── emoji_api.py
+	├── text_to_emoji.py
+	├── emoji_to_text.py
+	└── preprocess.py
 ```
 
-## API Usage
+## Notes
 
-### Text to Emoji
-```python
-from utils.emoji_api import translate_text_to_emoji_gpt
-
-result = translate_text_to_emoji_gpt("I love programming")
-print(result['emoji'])        # Output: 💻 or ❤️
-print(result['description'])  # Output: "Love, Heart, Affection"
-print(result['confidence'])   # Output: 0.95
-```
-
-### Emoji to Text
-```python
-from utils.emoji_api import translate_emoji_to_text_gpt
-
-result = translate_emoji_to_text_gpt("🚀")
-print(result['text'])         # Output: "Space rocket, launch"
-print(result['confidence'])   # Output: 0.95
-```
-
-## API Key Management
-
-### Getting Your API Key
-1. Go to https://platform.openai.com/api-keys
-2. Click "Create new secret key"
-3. Copy and paste it into your `.env` file
-
-### Cost Estimation
-- Each translation uses ~50-100 tokens
-- GPT-3.5 Turbo pricing: ~$0.0015 per 1K input tokens
-- Estimated cost: ~$0.00001-0.00002 per translation
-- 1000 translations ≈ $0.01-0.02
-
-## Environment Variables
-
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `OPENAI_API_KEY` | Your OpenAI API key | ✅ Yes |
+1. First launch can take longer while the model initializes.
+2. If the model cannot load, the app falls back to keyword-based quick matching.
+3. Keep both `requirements.txt` and `requirments.txt` only if you intentionally support both names.
 
 ## Troubleshooting
 
-### "API key not configured"
-- Check that `.env` file exists in the project root
-- Verify `OPENAI_API_KEY=` is set correctly
-- Restart the Flask app
+### App not starting
 
-### "OpenAI API Error"
-- Verify your API key is valid
-- Check your OpenAI account has available credits
-- Ensure you have an active subscription
+Run from the project directory:
 
-### Slow responses
-- First request takes longer (model warming up)
-- Subsequent requests are faster
-- GPT-3.5 Turbo ~500ms average response time
+```bash
+cd d:\coding\projects\emoji_transilator
+python app.py
+```
 
-## Performance
+### Slow first request
 
-- **Accuracy**: 95%+ for common words and emojis
-- **Speed**: ~500-1000ms per translation
-- **Concurrent Users**: Handles 100+ simultaneous requests
+This is expected while local model resources are loaded.
 
-## Limitations
+### Wrong emoji for a phrase
 
-- Requires internet connection for OpenAI API
-- API costs for high-volume usage
-- Some niche emojis may not be recognized
-- Responds in English only
+Update mapping logic in `utils/emoji_free.py` and add/clean relevant rows in `dataset/emoji_dataset.csv`.
 
-## Future Enhancements
+## Security
 
-🔄 Multi-language support  
-💾 Caching layer for faster responses  
-📊 Usage analytics dashboard  
-🎯 Custom emoji mappings  
-⚡ Batch processing API  
+1. Do not commit `.env`.
+2. Rotate any token that was ever exposed.
 
 ## License
 
-MIT License - Feel free to use this project for personal and commercial purposes.
-
-## Support
-
-For issues or questions:
-1. Check the troubleshooting section
-2. Review OpenAI documentation: https://platform.openai.com/docs
-3. Open an issue on GitHub
-
----
-
-Made with ❤️ using OpenAI GPT & Flask
+MIT
