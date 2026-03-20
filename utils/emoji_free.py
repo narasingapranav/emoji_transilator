@@ -6,6 +6,7 @@ import os
 from dotenv import load_dotenv
 import re
 import emoji as emoji_lib
+from utils.ml_emoji_model import load_model_if_available, predict_text
 
 # Load environment variables
 load_dotenv()
@@ -21,6 +22,9 @@ def _has_single_emoji(value):
 
 # Ignore noisy rows containing multiple chained emojis (e.g., 📞👨‍👩‍👧‍👦)
 clean_df = df[df["emoji"].apply(_has_single_emoji)].reset_index(drop=True)
+
+# Load ML pickle model if available.
+ml_model, ml_meta = load_model_if_available()
 
 # Check if Hugging Face API key is available
 HF_API_KEY = os.getenv("HUGGINGFACE_API_KEY")
@@ -255,6 +259,10 @@ def translate_text_to_emoji_free(user_text):
                 "method": "Quick Match"
             }
 
+        ml_prediction = predict_text(ml_model, ml_meta, normalized_text) if ml_model is not None else None
+        if ml_prediction is not None:
+            return ml_prediction
+
         if model is None or dataset_embeddings is None:
             return fallback_text_to_emoji(normalized_text)
             
@@ -318,6 +326,8 @@ def fallback_text_to_emoji(user_text):
         (r"code|coding|laptop|computer", "💻"),
         (r"phone|message|messages|text", "📱"),
         (r"music|song|listening", "🎵"),
+        (r"sun|sunny|sunshine", "☀️"),
+        (r"moon|night", "🌙"),
         (r"star|stars|sky", "⭐"),
         (r"hello|hi|greet|wave|hey|goodbye", "👋"),
     ]
