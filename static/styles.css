@@ -194,7 +194,8 @@ textarea {
     padding: 20px;
     background: white;
     border-radius: 12px;
-    line-height: 1;
+    line-height: 1.2;
+    white-space: pre-wrap;
 }
 
 .confidence-bar {
